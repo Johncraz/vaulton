@@ -1,0 +1,63 @@
+{
+  "name": "vaulton",
+  "version": "1.0.0",
+  "description": "Vaulton — an open-source, self-hosted, end-to-end encrypted password manager built with Bun, Hono, Drizzle ORM (SQLite), and Tailwind CSS.",
+  "author": {
+    "name": "Pintu Prajapati",
+    "email": "dev.codemuni@gmail.com",
+    "url": "https://github.com/devcodemuni"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/devcodemuni/vaulton.git"
+  },
+  "bugs": {
+    "url": "https://github.com/devcodemuni/vaulton/issues"
+  },
+  "homepage": "https://github.com/devcodemuni/vaulton#readme",
+  "keywords": [
+    "vaulton",
+    "password-manager",
+    "e2e-encryption",
+    "bun",
+    "hono",
+    "drizzle-orm",
+    "sqlite",
+    "tailwindcss",
+    "htmx",
+    "zod",
+    "security",
+    "vault",
+    "credentials",
+    "password-vault",
+    "self-hosted",
+    "open-source"
+  ],
+  "scripts": {
+    "dev": "bun run --hot src/index.ts",
+    "build": "bun run ./build.js.ts",
+    "build:css": "npx @tailwindcss/cli -i ./resources/input.css -o ./static/css/style.css --watch",
+    "migrate": "bunx drizzle-kit generate --dialect sqlite --schema ./src/database/schema/",
+    "start": "NODE_ENV=production bun run src/index.ts"
+  },
+  "dependencies": {
+    "@hono/zod-validator": "^0.7.2",
+    "drizzle-orm": "^0.44.4",
+    "hono": "^4.9.0",
+    "zod": "^4.0.17"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.2",
+    "@tailwindcss/cli": "^4.1.11",
+    "@types/bun": "latest",
+    "drizzle-kit": "^0.31.4",
+    "htmx.org": "2.0.6",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss": "^4.1.11",
+    "typed-htmx": "^0.3.1"
+  },
+  "engines": {
+    "bun": ">=1.2.19"
+  }
+}

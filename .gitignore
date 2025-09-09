@@ -1,0 +1,59 @@
+# See https://help.github.com/en/articles/ignoring-files#create-a-gitignore-file
+# dependencies
+/node_modules
+
+# testing
+/coverage
+
+# production
+/dist
+
+# misc
+.DS_Store
+database.*
+.env
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+
+# debugging
+chrome-debug.log
+firefox-debug.log
+
+# cache
+.cache
+.cache-loader
+
+# editor
+*.sublime-project
+*.sublime-workspace
+
+# IDEs
+.idea
+.vscode
+_atom
+.brackets.json
+.c9
+composer.lock
+devlog
+.gulp
+.settings
+.sass-cache
+.sourcemaps
+.vagrant
+.vue-templates/compiled
+
+# misc
+*.log
+*.tmp
+*.temp
+*.swp
+
+# build
+build/
+docs/
+tmp/
+temp/
+jspm_packages/
+

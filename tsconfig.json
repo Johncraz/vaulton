@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx",
+    /* Path resolution settings */
+    "baseUrl": "./", // root for resolving non-relative imports
+    "paths": {
+      "@/*": [
+        "src/*"
+      ], // shortcut for anything in src
+      "@/views/*": [
+        "src/views/*"
+      ], // direct access to views
+      "@/utils/*": [
+        "src/utils/*"
+      ], // direct access to utils
+      "@/middlewares/*": [
+        "src/middlewares/*"
+      ], // access middlewares
+      "@/components/*": [
+        "src/views/components/*"
+      ], // components alias
+      "@/pages/*": [
+        "src/views/pages/*"
+      ] // pages alias
+    },
+  }
+}
