@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vaulton – Secure Open Source Password Manager | Self-Hosted Solution</title>
+  <meta name="description" content="Vaulton is a free, open-source, end-to-end encrypted password manager built with modern technologies. Self-host your passwords securely with zero-knowledge encryption.">
+  <meta name="keywords" content="Vaulton, password manager, open source password manager, bunjs, hono, drizzle orm, sqlite, self-hosted password manager, secure password storage, end-to-end encryption, privacy-focused tools">
+  <meta name="author" content="Vaulton Team">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Vaulton - Secure Open Source Password Manager">
+  <meta property="og:description" content="Free, open-source, end-to-end encrypted password manager for teams and individuals.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vaulton.app">
+  <meta property="og:image" content="https://vaulton.app/images/og-image.png">
+  <link rel="canonical" href="https://vaulton.app">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      --dark-bg: #0f172a;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      cursor: none;
+      overflow-x: hidden;
+      background-color: var(--dark-bg);
+    }
+    
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .gradient-border {
+      position: relative;
+      background: var(--dark-bg);
+      border-radius: 1rem;
+      z-index: 1;
+    }
+    
+    .gradient-border::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      right: -1px;
+      bottom: -1px;
+      background: var(--primary-gradient);
+      border-radius: inherit;
+      z-index: -1;
+    }
+    
+    .custom-cursor {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(79, 172, 254, 0.8);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+      mix-blend-mode: difference;
+    }
+    
+    .custom-cursor.hovered {
+      transform: scale(1.8);
+      background: rgba(79, 172, 254, 0.3);
+      border-color: rgba(79, 172, 254, 0.5);
+    }
+    
+    .cursor-dot {
+      position: fixed;
+      width: 4px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transition: transform 0.1s ease;
+    }
+    
+    .tilt {
+      transition: transform 0.3s ease;
+    }
+    
+    .node {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: var(--primary-gradient);
+      border-radius: 50%;
+      filter: blur(1px);
+      box-shadow: 0 0 15px rgba(102, 126, 234, 0.6);
+    }
+    
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(5deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+    
+    .pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    .text-gradient {
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .feature-card {
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+  </style>
+</head>
+<body class="text-white min-h-screen flex flex-col">
+  <!-- Custom Cursor -->
+  <div class="custom-cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursor-dot"></div>
+
+  <!-- Announcement Banner -->
+  <div class="bg-gradient-to-r from-cyan-500 to-blue-500 text-gray-900 text-center py-3 font-semibold text-sm">
+    🚀 Vaulton is Under Active Development – <a href="https://github.com/devcodemuni/vaulton" target="_blank" class="underline hover:text-blue-800 transition-colors">Contribute on GitHub</a> 🚀
+  </div>
+
+  <!-- Hero Section -->
+  <header class="relative flex-1 flex items-center justify-center py-24 overflow-hidden">
+    <!-- Animated Background -->
+    <div id="nodes" class="absolute inset-0 overflow-hidden"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-indigo-900/30 via-purple-900/20 to-blue-900/10"></div>
+    
+    <!-- Animated Grid -->
+    <div class="absolute inset-0 opacity-20">
+      <div class="absolute inset-0 bg-grid-pattern"></div>
+    </div>
+
+    <div class="relative z-10 text-center px-6 max-w-5xl mx-auto">
+      <h1 id="hero-title" class="text-5xl md:text-7xl font-black tracking-tight mb-6">
+        <span class="text-gradient">Vaulton</span>
+      </h1>
+      <p id="hero-subtitle" class="mt-6 text-xl md:text-3xl max-w-3xl mx-auto text-gray-200 leading-relaxed font-light">
+        The <span class="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">secure</span>, self-hosted, open-source password manager for teams and individuals who value privacy.
+      </p>
+      <div id="hero-buttons" class="mt-12 flex flex-col sm:flex-row justify-center gap-6">
+        <a href="https://github.com/devcodemuni/vaulton" target="_blank"
+           class="px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 glass-effect shadow-2xl tilt transition-all duration-300 text-base font-semibold flex items-center justify-center">
+          <i data-lucide="github" class="w-5 h-5 mr-2"></i> Star on GitHub
+        </a>
+        <a href="#features"
+           class="px-8 py-4 rounded-xl bg-transparent hover:bg-blue-800/20 glass-effect border border-blue-500/30 shadow-xl tilt transition-all duration-300 text-base font-medium flex items-center justify-center">
+          <i data-lucide="sparkles" class="w-5 h-5 mr-2"></i> Explore Features
+        </a>
+      </div>
+      
+      <!-- Stats Section -->
+      <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto">
+        <div class="text-center">
+          <div class="text-3xl font-bold text-cyan-400">100%</div>
+          <div class="text-gray-400 mt-1">Open Source</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-purple-400">E2E</div>
+          <div class="text-gray-400 mt-1">Encrypted</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-blue-400">0</div>
+          <div class="text-gray-400 mt-1">Knowledge</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-green-400">MIT</div>
+          <div class="text-gray-400 mt-1">License</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Trusted By Section -->
+  <section class="py-12 bg-gray-900/50">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <p class="text-gray-400 mb-8 text-sm uppercase tracking-wider">Trusted by developers and teams at</p>
+      <div class="flex flex-wrap justify-center gap-8 md:gap-16 opacity-60">
+        <div class="flex items-center h-8">
+          <i data-lucide="building" class="w-8 h-8 mr-2"></i>
+          <span class="font-medium">TechCorp</span>
+        </div>
+        <div class="flex items-center h-8">
+          <i data-lucide="cloud" class="w-8 h-8 mr-2"></i>
+          <span class="font-medium">CloudSolutions</span>
+        </div>
+        <div class="flex items-center h-8">
+          <i data-lucide="code" class="w-8 h-8 mr-2"></i>
+          <span class="font-medium">DevStudio</span>
+        </div>
+        <div class="flex items-center h-8">
+          <i data-lucide="server" class="w-8 h-8 mr-2"></i>
+          <span class="font-medium">DataHost</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="py-24 bg-gray-900/30">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 id="features-title" class="text-4xl md:text-5xl font-bold text-center mb-4">
+        Why <span class="text-gradient">Vaulton</span> Stands Out
+      </h2>
+      <p class="text-xl text-gray-400 text-center max-w-3xl mx-auto mb-16">
+        A modern password management solution built with cutting-edge technology and security-first principles.
+      </p>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div id="feature-1" class="feature-card p-8 rounded-2xl gradient-border hover:shadow-2xl">
+          <div class="floating mb-6">
+            <i data-lucide="shield-check" class="w-12 h-12 text-cyan-400"></i>
+          </div>
+          <h3 class="text-2xl font-semibold mb-3">Zero-Knowledge Encryption</h3>
+          <p class="text-gray-300 leading-relaxed">Your credentials are encrypted locally with end-to-end encryption, ensuring only you have access to your data. Not even we can see your passwords.</p>
+        </div>
+        
+        <div id="feature-2" class="feature-card p-8 rounded-2xl gradient-border hover:shadow-2xl">
+          <div class="floating mb-6">
+            <i data-lucide="server" class="w-12 h-12 text-teal-400"></i>
+          </div>
+          <h3 class="text-2xl font-semibold mb-3">Fully Self-Hosted</h3>
+          <p class="text-gray-300 leading-relaxed">Host Vaulton on your own infrastructure for ultimate control and compliance with your privacy standards. No third-party cloud dependencies.</p>
+        </div>
+        
+        <div id="feature-3" class="feature-card p-8 rounded-2xl gradient-border hover:shadow-2xl">
+          <div class="floating mb-6">
+            <i data-lucide="code" class="w-12 h-12 text-purple-400"></i>
+          </div>
+          <h3 class="text-2xl font-semibold mb-3">Open Source & Transparent</h3>
+          <p class="text-gray-300 leading-relaxed">Licensed under MIT, Vaulton is community-driven, transparent, and free for everyone to use, audit, and contribute to.</p>
+        </div>
+        
+        <div id="feature-4" class="feature-card p-8 rounded-2xl gradient-border hover:shadow-2xl">
+          <div class="floating mb-6">
+            <i data-lucide="zap" class="w-12 h-12 text-yellow-400"></i>
+          </div>
+          <h3 class="text-2xl font-semibold mb-3">Built for Performance</h3>
+          <p class="text-gray-300 leading-relaxed">Powered by Bun.js and optimized SQLite, Vaulton delivers exceptional speed and efficiency even with thousands of credentials.</p>
+        </div>
+        
+        <div id="feature-5" class="feature-card p-8 rounded-2xl gradient-border hover:shadow-2xl">
+          <div class="floating mb-6">
+            <i data-lucide="users" class="w-12 h-12 text-blue-400"></i>
+          </div>
+          <h3 class="text-2xl font-semibold mb-3">Team Collaboration</h3>
+          <p class="text-gray-300 leading-relaxed">Securely share passwords with team members, manage permissions, and maintain oversight with detailed access logs.</p>
+        </div>
+        
+        <div id="feature-6" class="feature-card p-8 rounded-2xl gradient-border hover:shadow-2xl">
+          <div class="floating mb-6">
+            <i data-lucide="key" class="w-12 h-12 text-green-400"></i>
+          </div>
+          <h3 class="text-2xl font-semibold mb-3">Password Generator</h3>
+          <p class="text-gray-300 leading-relaxed">Create strong, unique passwords with our advanced generator that follows security best practices and customizable rules.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technology Stack Section -->
+  <section class="py-20 bg-gray-900/50">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-16">Powered by Modern Technology</h2>
+      
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div class="p-6 rounded-xl glass-effect hover:shadow-xl transition-all">
+          <div class="text-blue-400 mb-4">
+            <i data-lucide="command" class="w-12 h-12 mx-auto"></i>
+          </div>
+          <h3 class="font-semibold">Bun.js</h3>
+          <p class="text-gray-400 text-sm mt-2">Fast all-in-one JavaScript runtime</p>
+        </div>
+        
+        <div class="p-6 rounded-xl glass-effect hover:shadow-xl transition-all">
+          <div class="text-purple-400 mb-4">
+            <i data-lucide="flame" class="w-12 h-12 mx-auto"></i>
+          </div>
+          <h3 class="font-semibold">Hono</h3>
+          <p class="text-gray-400 text-sm mt-2">Ultrafast web framework</p>
+        </div>
+        
+        <div class="p-6 rounded-xl glass-effect hover:shadow-xl transition-all">
+          <div class="text-cyan-400 mb-4">
+            <i data-lucide="database" class="w-12 h-12 mx-auto"></i>
+          </div>
+          <h3 class="font-semibold">Drizzle ORM</h3>
+          <p class="text-gray-400 text-sm mt-2">TypeScript ORM for SQL databases</p>
+        </div>
+        
+        <div class="p-6 rounded-xl glass-effect hover:shadow-xl transition-all">
+          <div class="text-green-400 mb-4">
+            <i data-lucide="hard-drive" class="w-12 h-12 mx-auto"></i>
+          </div>
+          <h3 class="font-semibold">SQLite</h3>
+          <p class="text-gray-400 text-sm mt-2">Serverless, embedded database</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call-to-Action Section -->
+  <section id="cta" class="py-20 bg-gradient-to-br from-blue-900/30 to-purple-900/30 relative overflow-hidden">
+    <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+    <div class="relative z-10 max-w-4xl mx-auto text-center px-6">
+      <h2 id="cta-title" class="text-3xl md:text-4xl font-bold mb-6">Ready to Secure Your Passwords?</h2>
+      <p id="cta-subtitle" class="text-lg text-gray-300 mb-10 max-w-2xl mx-auto">Join a growing community of security-conscious users and take control of your password management with a secure, open-source solution.</p>
+      
+      <div class="flex flex-col sm:flex-row justify-center gap-6">
+        <a href="https://github.com/devcodemuni/vaulton" target="_blank"
+           class="px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 glass-effect shadow-lg tilt transition-all duration-300 text-base font-semibold">
+          Get Started
+        </a>
+        <a href="https://docs.vaulton.app" 
+           class="px-8 py-4 rounded-xl bg-transparent hover:bg-blue-800/20 glass-effect border border-blue-500/30 shadow-lg tilt transition-all duration-300 text-base font-medium">
+          Read Documentation
+        </a>
+      </div>
+      
+      <p class="mt-10 text-gray-400 text-sm">No credit card required. Open source and free forever.</p>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="py-20 bg-gray-900/30">
+    <div class="max-w-4xl mx-auto px-6">
+      <h2 class="text-3xl md:text-4xl font-bold text-center mb-16">Frequently Asked Questions</h2>
+      
+      <div class="space-y-6">
+        <div class="p-6 rounded-xl glass-effect">
+          <h3 class="font-semibold text-lg mb-2">Is Vaulton really free to use?</h3>
+          <p class="text-gray-300">Yes, Vaulton is completely free and open-source under the MIT license. You can use it for personal or commercial purposes without any cost.</p>
+        </div>
+        
+        <div class="p-6 rounded-xl glass-effect">
+          <h3 class="font-semibold text-lg mb-2">How does the zero-knowledge encryption work?</h3>
+          <p class="text-gray-300">Your data is encrypted on your device before being stored. Only you hold the encryption keys, meaning we have zero knowledge of your passwords or sensitive information.</p>
+        </div>
+        
+        <div class="p-6 rounded-xl glass-effect">
+          <h3 class="font-semibold text-lg mb-2">Can I host Vaulton on my own server?</h3>
+          <p class="text-gray-300">Absolutely! Vaulton is designed to be self-hosted. You can deploy it on your own infrastructure, whether it's a home server, cloud instance, or enterprise environment.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 bg-gray-900/80 glass-effect">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-4 gap-8">
+        <div class="md:col-span-2">
+          <h3 class="text-2xl font-bold mb-4 text-gradient">Vaulton</h3>
+          <p class="text-gray-400 max-w-md">A secure, open-source password manager for teams and individuals who value privacy and control.</p>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold mb-4">Resources</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors">Documentation</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors">API Reference</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors">GitHub</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors">Community</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold mb-4">Company</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors">About</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors">Blog</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors">Careers</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-400 text-sm">© 2025 Vaulton. Licensed under <a href="https://opensource.org/licenses/MIT" target="_blank" class="underline hover:text-cyan-400">MIT License</a>.</p>
+        <p class="text-gray-400 text-sm mt-4 md:mt-0">Built with <span class="text-red-400">♥</span> by the open-source community.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Animation and Interaction Script -->
+  <script>
+    lucide.createIcons();
+
+    // Create background grid pattern
+    const style = document.createElement('style');
+    style.textContent = `
+      .bg-grid-pattern {
+        background-image: 
+          linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Hero Section Node Background
+    const nodeContainer = document.getElementById('nodes');
+    const nodeCount = 40;
+    const nodes = [];
+    
+    for (let i = 0; i < nodeCount; i++) {
+      const node = document.createElement('div');
+      node.classList.add('node');
+      nodeContainer.appendChild(node);
+      
+      // Random size and color variation
+      const size = Math.random() * 6 + 4;
+      node.style.width = `${size}px`;
+      node.style.height = `${size}px`;
+      
+      // Color variations
+      const colors = [
+        'rgba(102, 126, 234, 0.6)',
+        'rgba(118, 75, 162, 0.6)',
+        'rgba(79, 172, 254, 0.6)',
+        'rgba(240, 147, 251, 0.6)'
+      ];
+      node.style.background = colors[Math.floor(Math.random() * colors.length)];
+      
+      nodes.push(node);
+    }
+
+    // Initial node positioning
+    nodes.forEach(node => {
+      node.style.left = `${Math.random() * 100}%`;
+      node.style.top = `${Math.random() * 100}%`;
+    });
+
+    // Mouse interaction for nodes
+    let mouseX = 0, mouseY = 0;
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      
+      nodes.forEach((node, index) => {
+        const rect = node.getBoundingClientRect();
+        const nodeX = rect.left + rect.width / 2;
+        const nodeY = rect.top + rect.height / 2;
+        
+        const distX = mouseX - nodeX;
+        const distY = mouseY - nodeY;
+        const distance = Math.sqrt(distX * distX + distY * distY);
+        
+        // Only animate nodes close to cursor
+        if (distance < 200) {
+          const force = (200 - distance) / 200;
+          anime({
+            targets: node,
+            translateX: distX * force * 0.2,
+            translateY: distY * force * 0.2,
+            scale: 1 + force * 0.5,
+            duration: 1000,
+            easing: 'easeOutQuad'
+          });
+        }
+      });
+    });
+
+    // Node idle animation
+    anime({
+      targets: '.node',
+      translateX: () => anime.random(-20, 20),
+      translateY: () => anime.random(-20, 20),
+      scale: () => anime.random(0.8, 1.5),
+      opacity: [0.4, 0.8],
+      duration: () => anime.random(3000, 6000),
+      easing: 'easeInOutSine',
+      loop: true,
+      direction: 'alternate',
+      delay: anime.stagger(100)
+    });
+
+    // Hero Section Animations
+    anime.timeline({ easing: 'easeOutExpo' })
+      .add({
+        targets: '#hero-title',
+        translateY: [-50, 0],
+        opacity: [0, 1],
+        duration: 1200
+      })
+      .add({
+        targets: '#hero-subtitle',
+        translateY: [30, 0],
+        opacity: [0, 1],
+        duration: 1000,
+        delay: 200
+      })
+      .add({
+        targets: '#hero-buttons a',
+        translateY: [20, 0],
+        opacity: [0, 1],
+        duration: 800,
+        delay: anime.stagger(150)
+      });
+
+    // Features Section Animations
+    anime({
+      targets: '#features-title',
+      translateY: [30, 0],
+      opacity: [0, 1],
+      duration: 1000,
+      easing: 'easeOutExpo',
+      delay: 300
+    });
+
+    anime({
+      targets: ['.feature-card'],
+      translateY: [60, 0],
+      opacity: [0, 1],
+      duration: 1200,
+      easing: 'easeOutExpo',
+      delay: anime.stagger(200, { start: 500 })
+    });
+
+    // CTA Section Animations
+    anime({
+      targets: ['#cta-title', '#cta-subtitle', '#cta a'],
+      translateY: [20, 0],
+      opacity: [0, 1],
+      duration: 1000,
+      easing: 'easeOutExpo',
+      delay: anime.stagger(200, { start: 800 })
+    });
+
+    // Custom Cursor and Mouse Move Effects
+    const cursor = document.getElementById('cursor');
+    const cursorDot = document.getElementById('cursor-dot');
+    
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = `${e.clientX - 10}px`;
+      cursor.style.top = `${e.clientY - 10}px`;
+      
+      cursorDot.style.left = `${e.clientX - 2}px`;
+      cursorDot.style.top = `${e.clientY - 2}px`;
+    });
+
+    // Cursor Hover Effects
+    document.querySelectorAll('a, button, .feature-card').forEach(elem => {
+      elem.addEventListener('mouseenter', () => {
+        cursor.classList.add('hovered');
+        cursorDot.style.transform = 'scale(1.5)';
+      });
+      elem.addEventListener('mouseleave', () => {
+        cursor.classList.remove('hovered');
+        cursorDot.style.transform = 'scale(1)';
+      });
+    });
+
+    // Mouse Move Tilt Effect
+    document.querySelectorAll('.tilt').forEach(elem => {
+      elem.addEventListener('mousemove', (e) => {
+        const rect = elem.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        
+        const tiltX = -(y / rect.height) * 8;
+        const tiltY = (x / rect.width) * 8;
+        
+        elem.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(1.05, 1.05, 1.05)`;
+      });
+      
+      elem.addEventListener('mouseleave', () => {
+        anime({
+          targets: elem,
+          transform: 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)',
+          duration: 800,
+          easing: 'easeOutElastic(1, .5)'
+        });
+      });
+    });
+
+    // Add scroll animations
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = 1;
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Observe elements for scroll animations
+    document.querySelectorAll('.feature-card, .floating, .gradient-border').forEach(el => {
+      el.style.opacity = 0;
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>

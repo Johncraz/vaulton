@@ -52,7 +52,6 @@ devlog
 
 # build
 build/
-docs/
 tmp/
 temp/
 jspm_packages/
